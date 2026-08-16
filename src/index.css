@@ -1,0 +1,43 @@
+:root {
+  /* Paleta "padrão Energisa" — ajuste os hex abaixo caso o manual de
+     marca oficial da empresa informe valores diferentes dos usados aqui. */
+  --energisa-azul-profundo: #0a2f4e;
+  --energisa-azul: #0072bc;
+  --energisa-azul-claro: #4fb3e8;
+  --energisa-verde: #00a65e;
+  --energisa-verde-claro: #8dc63f;
+  --energisa-laranja: #f47929; /* usada para os limites de campo */
+  --energisa-branco: #ffffff;
+  --energisa-cinza-texto: #1f2933;
+  --energisa-cinza-claro: #eef3f6;
+
+  --sombra-painel: 0 1.2vh 3vh rgba(10, 47, 78, 0.25);
+  --raio-padrao: 1.2vh;
+  --raio-botao: 1vh;
+
+  --fonte-titulo: "Poppins", "Montserrat", "Segoe UI", sans-serif;
+  --fonte-corpo: "Inter", "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--fonte-corpo);
+  color: var(--energisa-cinza-texto);
+
+  background: linear-gradient(
+    to bottom,
+    var(--energisa-azul) -10%,
+    var(--energisa-azul-profundo) 55%,
+    #061e33 100%
+  );
+}
