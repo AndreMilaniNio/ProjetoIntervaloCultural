@@ -92,17 +92,21 @@ function App() {
       </main>
     );
   }
-  
+
   const perguntaAtual = perguntasDoJogo[NumeroDaQuestao];
   const classePergunta = classeDeTamanho(perguntaAtual.pergunta, {
     medio: 60,
     grande: 100,
   });
-  
+
   // Tela comum do Quiz
   return (
     <main className="quiz-energisa">
-      <img className="logomarca-energisa" src="./public/EnergisaLogomarca.png" alt="Logomarca Energisa" />
+      <img
+        className="logomarca-energisa"
+        src="/EnergisaLogomarca.png"
+        alt="Logomarca Energisa"
+      />
       <div className="palco-quiz">
         <div className="painel-quiz">
           <div className="cabecalho-painel">
