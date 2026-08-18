@@ -104,7 +104,7 @@ function App() {
     <main className="quiz-energisa">
       <img
         className="logomarca-energisa"
-        src="/EnergisaLogomarca.png"
+        src="/public/EnergisaLogomarca.png"
         alt="Logomarca Energisa"
       />
       <div className="palco-quiz">
