@@ -88,7 +88,7 @@ function App() {
           </span>
         </div>
 
-        <p className="rodape-assinatura">Made by André Milani</p>
+        <p className="rodape-assinatura">Feito por - André Milani</p>
       </main>
     );
   }
@@ -115,45 +115,46 @@ function App() {
             </span>
           </div>
 
-          <div className={`caixa-pergunta ${classePergunta}`}>
-            <h1 className="texto-pergunta">
-              <span className="numero-pergunta">{NumeroDaQuestao + 1}.</span>{" "}
-              {perguntaAtual.pergunta}
-            </h1>
+          <div className="box-pergunta-resposta">
+            <div className={`caixa-pergunta ${classePergunta}`}>
+              <h1 className="texto-pergunta">
+                <span className="numero-pergunta">{NumeroDaQuestao + 1}.</span>{" "}
+                {perguntaAtual.pergunta}
+              </h1>
+            </div>
+
+            <ul className="lista-respostas">
+              {[
+                perguntaAtual.resposta1,
+                perguntaAtual.resposta2,
+                perguntaAtual.resposta3,
+              ].map((resposta, indice) => {
+                const classeResposta = classeDeTamanho(resposta, {
+                  medio: 18,
+                  grande: 30,
+                });
+                return (
+                  <li className="item-resposta" key={indice}>
+                    <button
+                      className={`botao-resposta ${classeResposta} ${
+                        desabilitado
+                          ? resposta === perguntaAtual.respostaCerta
+                            ? "resposta-correta"
+                            : resposta === respostaSelecionada
+                              ? "resposta-errada"
+                              : "resposta-neutra"
+                          : ""
+                      }`}
+                      onClick={() => verificaResposta(resposta)}
+                      disabled={desabilitado}
+                    >
+                      {resposta}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-
-          <ul className="lista-respostas">
-            {[
-              perguntaAtual.resposta1,
-              perguntaAtual.resposta2,
-              perguntaAtual.resposta3,
-            ].map((resposta, indice) => {
-              const classeResposta = classeDeTamanho(resposta, {
-                medio: 18,
-                grande: 30,
-              });
-              return (
-                <li className="item-resposta" key={indice}>
-                  <button
-                    className={`botao-resposta ${classeResposta} ${
-                      desabilitado
-                        ? resposta === perguntaAtual.respostaCerta
-                          ? "resposta-correta"
-                          : resposta === respostaSelecionada
-                            ? "resposta-errada"
-                            : "resposta-neutra"
-                        : ""
-                    }`}
-                    onClick={() => verificaResposta(resposta)}
-                    disabled={desabilitado}
-                  >
-                    {resposta}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
           {/* Caixa de retorno visual ao responder */}
           <span
             className={`feedback-mensagem ${
@@ -173,7 +174,7 @@ function App() {
         </div>
       </div>
 
-      <p className="rodape-assinatura">Made by André Milani</p>
+      <p className="rodape-assinatura">Feito por - André Milani</p>
     </main>
   );
 }
