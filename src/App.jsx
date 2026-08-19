@@ -75,9 +75,9 @@ function App() {
           <div className="caixa-resultado-final">
             <h1 className="titulo-resultado">Resultado Final</h1>
             <p className="texto-resultado">
-              {acertos < 10
-                ? `Você acertou ${acertos} de ${perguntasDoJogo.length} perguntas. Infelizmente não ganha o precioso prêmio...`
-                : `Você acertou mais de 10 perguntas, conseguiu o prêmio!`}
+              {acertos < 7
+                ? `Você acertou ${acertos} de ${perguntasDoJogo} perguntas. Infelizmente não ganha o precioso prêmio...`
+                : `Você acertou ${acertos} de ${perguntasDoJogo} perguntas, conseguiu o prêmio!`}
             </p>
           </div>
 
