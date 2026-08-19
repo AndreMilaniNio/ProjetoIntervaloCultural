@@ -76,8 +76,8 @@ function App() {
             <h1 className="titulo-resultado">Resultado Final</h1>
             <p className="texto-resultado">
               {acertos < 7
-                ? `Você acertou ${acertos} de ${perguntasDoJogo} perguntas. Infelizmente não ganha o precioso prêmio...`
-                : `Você acertou ${acertos} de ${perguntasDoJogo} perguntas, conseguiu o prêmio!`}
+                ? `Você acertou ${acertos} de ${perguntasDoJogo.length} perguntas. Infelizmente não ganha o precioso prêmio...`
+                : `Você acertou ${acertos} de ${perguntasDoJogo.length} perguntas, conseguiu o prêmio!`}
             </p>
           </div>
 
