@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import "./App.css";
 import { listaDePerguntas } from "./data/listaDePerguntas";
 
@@ -17,15 +17,6 @@ function gerarPerguntasDoJogo() {
   return embaralharPerguntas(listaDePerguntas).slice(0, 10);
 }
 
-// Decide uma classe modificadora de tamanho de fonte a partir do
-// comprimento do texto, para o texto nunca ultrapassar a caixa laranja.
-function classeDeTamanho(texto, limites) {
-  if (!texto) return "";
-  if (texto.length > limites.grande) return "texto-minimo";
-  if (texto.length > limites.medio) return "texto-reduzido";
-  return "";
-}
-
 // Funcionalidade geral da aplicação
 function App() {
   const [feedback, setFeedback] = useState("");
@@ -36,6 +27,20 @@ function App() {
 
   // Lista de 10 perguntas sorteadas, gerada uma vez ao montar o componente
   const [perguntasDoJogo, setPerguntasDoJogo] = useState(gerarPerguntasDoJogo);
+
+  // Pergunta atual (precisa vir antes do return condicional, pois hooks abaixo dependem dela)
+  const perguntaAtual = perguntasDoJogo[NumeroDaQuestao];
+
+  // Embaralha as opções de resposta da pergunta atual.
+  // Recalcula apenas quando a pergunta muda, para não embaralhar de novo a cada clique/re-render.
+  const opcoesEmbaralhadas = useMemo(() => {
+    if (!perguntaAtual) return [];
+    return embaralharPerguntas([
+      perguntaAtual.resposta1,
+      perguntaAtual.resposta2,
+      perguntaAtual.resposta3,
+    ]);
+  }, [perguntaAtual]);
 
   // Verifica se a função escolhida é a correta
   function verificaResposta(respostaEscolhida) {
@@ -70,18 +75,18 @@ function App() {
   // Tela final após terminar o quiz
   if (NumeroDaQuestao >= perguntasDoJogo.length) {
     return (
-      <main className="quiz-energisa">
-        <div className="tela-final animar">
-          <div className="caixa-resultado-final">
-            <h1 className="titulo-resultado">Resultado Final</h1>
-            <p className="texto-resultado">
+      <main className="container-quiz">
+        <div className="tela-resultado-final animacao-entrada">
+          <div className="caixa-resumo-final">
+            <h1 className="titulo-resumo-final">Resultado Final</h1>
+            <p className="texto-resumo-final">
               {acertos < 7
                 ? `Você acertou ${acertos} de ${perguntasDoJogo.length} perguntas. Infelizmente não ganha o precioso prêmio...`
                 : `Você acertou ${acertos} de ${perguntasDoJogo.length} perguntas, conseguiu o prêmio!`}
             </p>
           </div>
 
-          <span className="area-botao-reiniciar">
+          <span className="container-botao-reiniciar">
             <button className="botao-reiniciar" onClick={reiniciarQuiz}>
               Jogar novamente
             </button>
@@ -93,21 +98,15 @@ function App() {
     );
   }
 
-  const perguntaAtual = perguntasDoJogo[NumeroDaQuestao];
-  const classePergunta = classeDeTamanho(perguntaAtual.pergunta, {
-    medio: 60,
-    grande: 100,
-  });
-
   // Tela comum do Quiz
   return (
-    <main className="quiz-energisa">
+    <main className="container-quiz">
       <img
         className="logomarca-energisa"
         src="./EnergisaLogomarca.png"
         alt="Logomarca Energisa"
       />
-      <div className="palco-quiz">
+      <div className="container-perguntas">
         <div className="painel-quiz">
           <div className="cabecalho-painel">
             <span className="contador-perguntas">
@@ -115,58 +114,50 @@ function App() {
             </span>
           </div>
 
-          <div className="box-pergunta-resposta">
-            <div className={`caixa-pergunta ${classePergunta}`}>
-              <h1 className="texto-pergunta">
-                <span className="numero-pergunta">{NumeroDaQuestao + 1}.</span>{" "}
+          <div className="corpo-quiz">
+            <div className="caixa-enunciado">
+              <h1 className="texto-enunciado">
+                <span className="numero-enunciado">{NumeroDaQuestao + 1}.</span>{" "}
                 {perguntaAtual.pergunta}
               </h1>
             </div>
 
             <ul className="lista-respostas">
-              {[
-                perguntaAtual.resposta1,
-                perguntaAtual.resposta2,
-                perguntaAtual.resposta3,
-              ].map((resposta, indice) => {
-                const classeResposta = classeDeTamanho(resposta, {
-                  medio: 18,
-                  grande: 30,
-                });
-                return (
-                  <li className="item-resposta" key={indice}>
-                    <button
-                      className={`botao-resposta ${classeResposta} ${
-                        desabilitado
-                          ? resposta === perguntaAtual.respostaCerta
-                            ? "resposta-correta"
-                            : resposta === respostaSelecionada
-                              ? "resposta-errada"
-                              : "resposta-neutra"
-                          : ""
-                      }`}
-                      onClick={() => verificaResposta(resposta)}
-                      disabled={desabilitado}
-                    >
-                      {resposta}
-                    </button>
-                  </li>
-                );
-              })}
+              {opcoesEmbaralhadas.map((resposta, indice) => (
+                <li className="item-resposta" key={indice}>
+                  <button
+                    className={`botao-resposta ${
+                      desabilitado
+                        ? resposta === perguntaAtual.respostaCerta
+                          ? "resposta-correta"
+                          : resposta === respostaSelecionada
+                            ? "resposta-errada"
+                            : "resposta-neutra"
+                        : ""
+                    }`}
+                    onClick={() => verificaResposta(resposta)}
+                    disabled={desabilitado}
+                  >
+                    {resposta}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
           {/* Caixa de retorno visual ao responder */}
           <span
             className={`feedback-mensagem ${
               feedback === "Certa a resposta!"
-                ? "feedback-mensagem--certo"
+                ? "feedback-mensagem-correta"
                 : feedback === "Errada a resposta!"
-                  ? "feedback-mensagem--errado"
+                  ? "feedback-mensagem-errada"
                   : ""
             }`}
           >
             <h2
-              className={feedback ? "feedback-texto animar" : "feedback-texto"}
+              className={
+                feedback ? "feedback-texto animacao-entrada" : "feedback-texto"
+              }
             >
               {feedback}
             </h2>

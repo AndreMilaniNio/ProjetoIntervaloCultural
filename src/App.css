@@ -1,11 +1,9 @@
 /* =========================================================================
 ESTRUTURA GERAL
 ========================================================================= */
-
-
-.quiz-energisa {
-  width: 100vw;
-  height: 100vh;
+.container-quiz {
+  width: 100%;
+  height: 115vh;
 
   display: flex;
   flex-direction: column;
@@ -13,22 +11,29 @@ ESTRUTURA GERAL
   justify-content: center;
 }
 
-.logomarca-energisa{
-  position: absolute;
-  left: -10%;
-  height: 120vh;
+.logomarca-energisa {
+  position: fixed;
   z-index: -1;
+  left: -12%;
+  top: -10%;
+  height: 120%;
+
   opacity: 60%;
-  filter: blur(10px);  
+  filter: blur(10px);
 }
 
-.palco-quiz {
-  width: 120%;
-  height: 100%;
+.container-perguntas {
+  width: 80%;
+  height: 75%;
 
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 120px;
+
+  background-color: var(--energisa-branco);
+  border-radius: var(--raio-padrao);
+  box-shadow: var(--sombra-painel);
 }
 
 /* =========================================================================
@@ -36,29 +41,26 @@ ESTRUTURA GERAL
    ========================================================================= */
 
 .painel-quiz {
-  width: 70%;
+  width: 100%;
   height: 100%;
-  max-height: 85vh;
-  background: var(--energisa-branco);
-  border-radius: 1rem;
-
-  box-shadow: 0px 4px 16px black;
-  padding: 1rem 2rem;
 
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
 }
 
-.box-pergunta-resposta{
+.corpo-quiz {
   width: 100%;
   height: 100%;
+
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 2%;
 }
 
 .cabecalho-painel {
+  height: 10%;
   display: flex;
   align-items: center;
   justify-content: right;
@@ -69,45 +71,33 @@ ESTRUTURA GERAL
   font-weight: 700;
   color: var(--energisa-azul-profundo);
   background: var(--energisa-cinza-claro);
-  padding: 0.6vh 1.4vw;
   border-radius: 999px;
-  font-size: clamp(0.8rem, 1.4vw, 1.1rem);
+  padding: 0.4rem 1rem;
 }
 
-/* Caixa de pergunta — a borda azul é o "limite do campo":
-   se o texto crescer demais, a fonte diminui via classes utilitárias
-   (.texto-reduzido / .texto-minimo), nunca a caixa. */
-
-.caixa-pergunta {
+.caixa-enunciado {
   width: 100%;
-  border: 3px solid var(--energisa-azul-claro);
-  border-radius: var(--raio-padrao);
-  padding: 2vh 2vw;
   flex: 1 1 auto;
+
   display: flex;
   align-items: center;
+  padding: 1rem;
+
+  border: 3px solid var(--energisa-azul-claro);
+  border-radius: var(--raio-padrao);
   overflow: hidden;
 }
 
-.texto-pergunta {
-  margin: 0;
+.texto-enunciado {
   font-family: var(--fonte-titulo);
   font-weight: 700;
   line-height: 1.25;
   color: var(--energisa-azul-profundo);
-  font-size: clamp(1.3rem, 2.6vw, 2.4rem);
+  font-size: 2rem;
 }
 
-.numero-pergunta {
+.numero-enunciado {
   color: var(--energisa-azul-claro);
-}
-
-.caixa-pergunta.texto-reduzido .texto-pergunta {
-  font-size: clamp(1.1rem, 2.1vw, 1.9rem);
-}
-
-.caixa-pergunta.texto-minimo .texto-pergunta {
-  font-size: clamp(0.95rem, 1.7vw, 1.5rem);
 }
 
 /* =========================================================================
@@ -116,14 +106,10 @@ ESTRUTURA GERAL
 
 .lista-respostas {
   width: 60%;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 1.4vw;
-  /* align-items padrão é "stretch": todo botão assume a altura do
-     item mais alto da linha automaticamente, sem JS. */
+  gap: 1.4%;
 }
 
 .item-resposta {
@@ -133,14 +119,14 @@ ESTRUTURA GERAL
 
 .botao-resposta {
   width: 100%;
+
   border: 3px solid var(--energisa-azul-claro);
   border-radius: var(--raio-botao);
   background: var(--energisa-branco);
   color: var(--energisa-cinza-texto);
   font-family: var(--fonte-corpo);
   font-weight: 600;
-  font-size: clamp(0.95rem, 1.6vw, 1.35rem);
-  padding: 1.6vh 1vw;
+  font-size: 1.1rem;
   cursor: pointer;
 
   transition:
@@ -152,23 +138,12 @@ ESTRUTURA GERAL
     transform 0.1s ease;
 }
 
-.botao-resposta.texto-reduzido {
-  font-size: clamp(0.8rem, 1.3vw, 1.1rem);
-}
-
-.botao-resposta.texto-minimo {
-  font-size: clamp(0.7rem, 1.1vw, 0.95rem);
-}
-
 .botao-resposta:active:not(:disabled) {
   transform: translateY(1px) scale(0.99);
 }
 
 /* -------------------------------------------------------------------------
    ESTADOS APÓS A RESPOSTA
-   Apenas a resposta correta fica em destaque; errada e neutra recebem
-   o mesmo tratamento de opacidade, sem brilho, para não competir
-   visualmente com o acerto.
    ------------------------------------------------------------------------- */
 
 .botao-resposta.resposta-neutra,
@@ -204,42 +179,39 @@ ESTRUTURA GERAL
    ========================================================================= */
 
 .feedback-mensagem {
+  height: 10%;
+
   display: flex;
   justify-content: center;
   align-items: center;
-
-  height: 6vh;
-  min-height: 4vh;
 
   border-radius: var(--raio-botao);
   transition: background-color 0.2s ease;
 }
 
-.feedback-mensagem--certo {
+.feedback-mensagem-correta {
   background-color: rgba(0, 166, 94, 0.15);
 }
 
-.feedback-mensagem--errado {
+.feedback-mensagem-errada {
   background-color: rgba(244, 121, 41, 0.18);
 }
 
 .feedback-texto {
   margin: 0;
-  padding: 0.8vh 0;
   font-family: var(--fonte-titulo);
-  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
   font-weight: 700;
 }
 
-.feedback-mensagem--certo .feedback-texto {
+.feedback-mensagem-correta .feedback-texto {
   color: var(--energisa-verde);
 }
 
-.feedback-mensagem--errado .feedback-texto {
+.feedback-mensagem-errada .feedback-texto {
   color: #c14e12;
 }
 
-.animar {
+.animacao-entrada {
   animation: aparecer 0.25s ease;
 }
 
@@ -259,47 +231,54 @@ ESTRUTURA GERAL
    TELA FINAL
    ========================================================================= */
 
-.tela-final {
+.tela-resultado-final {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2.5vh;
+  gap: 2rem;
+
+  max-width: 800px;
+  width: 90%;
+  margin-top: 120px;
+
   background: var(--energisa-branco);
   border-radius: calc(var(--raio-padrao) * 1.5);
   box-shadow: var(--sombra-painel);
-  padding: 5vh 5vw;
-  max-width: 700px;
-  width: 90%;
+  padding: 3rem 5rem;
 }
 
-.caixa-resultado-final {
+.caixa-resumo-final {
   text-align: center;
 }
 
-.titulo-resultado {
+.titulo-resumo-final {
   font-family: var(--fonte-titulo);
   color: var(--energisa-azul-profundo);
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-  margin: 0 0 1.2vh;
+  margin: 0 0 1rem;
 }
 
-.texto-resultado {
-  font-size: clamp(1rem, 1.6vw, 1.25rem);
+.texto-resumo-final {
   line-height: 1.5;
+  font-size: 1.5rem;
   color: var(--energisa-cinza-texto);
   margin: 0;
 }
 
+.container-botao-reiniciar {
+  display: flex;
+}
+
 .botao-reiniciar {
+  width: 100%;
   border: none;
-  border-radius: 999px;
+  border-radius: 2rem;
   background: var(--energisa-verde);
   color: var(--energisa-branco);
+  font-size: 1.75rem;
   font-family: var(--fonte-titulo);
   font-weight: 700;
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  padding: 1.4vh 3vw;
+  padding: 1.75rem 3rem;
   cursor: pointer;
 
   transition:
@@ -320,9 +299,8 @@ ESTRUTURA GERAL
    ========================================================================= */
 
 .rodape-assinatura {
-  margin-top: 1.6vh;
-  font-size: clamp(0.65rem, 0.9vw, 0.85rem);
   color: rgba(255, 255, 255, 0.7);
+  margin: 1rem;
 }
 
 /* =========================================================================
@@ -330,65 +308,20 @@ ESTRUTURA GERAL
    ========================================================================= */
 
 @media (max-width: 700px) {
-  .quiz-energisa {
+  .container-quiz {
     height: auto;
     min-height: 100vh;
-    padding: 3vh 4vw 4vh;
-    overflow: auto;
   }
 
-  .palco-quiz {
+  .container-perguntas {
     max-height: none;
   }
 
   .painel-quiz {
     max-height: none;
-    padding: 2.4rem 1.4rem;
-    gap: 1.6rem;
-  }
-
-  .caixa-pergunta {
-    padding: 1.4rem 1.2rem;
-  }
-
-  .texto-pergunta {
-    font-size: clamp(1.1rem, 5vw, 1.5rem);
-  }
-
-  .caixa-pergunta.texto-reduzido .texto-pergunta {
-    font-size: clamp(1rem, 4.4vw, 1.3rem);
-  }
-
-  .caixa-pergunta.texto-minimo .texto-pergunta {
-    font-size: clamp(0.9rem, 3.8vw, 1.1rem);
   }
 
   .lista-respostas {
     flex-direction: column;
-  }
-
-  .botao-resposta {
-    font-size: 1rem;
-    padding: 1rem 1rem;
-  }
-
-  .tela-final {
-    padding: 4rem 1.6rem;
-    width: 92%;
-  }
-}
-
-/* Telas muito pequenas (celulares estreitos) */
-
-@media (max-width: 380px) {
-  .quiz-energisa {
-    padding: 0;
-  }
-  .texto-pergunta {
-    font-size: clamp(1rem, 5.5vw, 1.3rem);
-  }
-
-  .botao-resposta {
-    font-size: 0.9rem;
   }
 }
